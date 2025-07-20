@@ -5,15 +5,30 @@ const { useState } = React;
 
 export type Element = ((state: boolean) => React.ReactElement<any>) | React.ReactElement<any>;
 
-const useHover = (element: Element): [React.ReactElement<any>, boolean] => {
+export interface UseHoverOptions {
+  stopPropagation?: boolean;
+  onMouseEnter?: (event: React.MouseEvent) => void;
+  onMouseLeave?: (event: React.MouseEvent) => void;
+}
+
+const useHover = (element: Element, options?: UseHoverOptions): [React.ReactElement<any>, boolean] => {
   const [state, setState] = useState(false);
+  const { stopPropagation = false, onMouseEnter: onMouseEnterOption, onMouseLeave: onMouseLeaveOption } = options || {};
 
   const onMouseEnter = (originalOnMouseEnter?: any) => (event: any) => {
+    if (stopPropagation) {
+      event.stopPropagation();
+    }
     (originalOnMouseEnter || noop)(event);
+    (onMouseEnterOption || noop)(event);
     setState(true);
   };
   const onMouseLeave = (originalOnMouseLeave?: any) => (event: any) => {
+    if (stopPropagation) {
+      event.stopPropagation();
+    }
     (originalOnMouseLeave || noop)(event);
+    (onMouseLeaveOption || noop)(event);
     setState(false);
   };
 

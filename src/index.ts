@@ -30,7 +30,7 @@ export { default as useGeolocation } from './useGeolocation';
 export { default as useGetSet } from './useGetSet';
 export { default as useGetSetState } from './useGetSetState';
 export { default as useHarmonicIntervalFn } from './useHarmonicIntervalFn';
-export { default as useHover } from './useHover';
+export { default as useHover, UseHoverOptions } from './useHover';
 export { default as useHoverDirty } from './useHoverDirty';
 export { default as useIdle } from './useIdle';
 export { default as useIntersection } from './useIntersection';
