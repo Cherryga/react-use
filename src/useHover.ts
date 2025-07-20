@@ -15,12 +15,12 @@ export interface UseHoverOptions {
    * Useful for nested hoverable elements.
    */
   stopPropagation?: boolean;
-  
+
   /**
    * Callback when mouse enters - provides access to mouse event
    */
   onMouseEnter?: (event: React.MouseEvent) => void;
-  
+
   /**
    * Callback when mouse leaves - provides access to mouse event
    */
@@ -31,11 +31,18 @@ export interface UseHoverOptions {
  * Enhanced useHover with event propagation control and event access.
  * Maintains full backward compatibility.
  */
-const useHover = (element: Element, options?: UseHoverOptions): [React.ReactElement<any>, boolean] => {
+const useHover = (
+  element: Element,
+  options?: UseHoverOptions
+): [React.ReactElement<any>, boolean] => {
   const [state, setState] = useState(false);
-  
+
   // Extract options with backward-compatible defaults
-  const { stopPropagation = false, onMouseEnter: onMouseEnterOption, onMouseLeave: onMouseLeaveOption } = options || {};
+  const {
+    stopPropagation = false,
+    onMouseEnter: onMouseEnterOption,
+    onMouseLeave: onMouseLeaveOption,
+  } = options || {};
 
   /**
    * Enhanced mouse enter handler with optional stopPropagation and event access
@@ -45,13 +52,13 @@ const useHover = (element: Element, options?: UseHoverOptions): [React.ReactElem
     if (stopPropagation) {
       event.stopPropagation();
     }
-    
+
     // Preserve original behavior
     (originalOnMouseEnter || noop)(event);
-    
+
     // Call custom callback for event access
     (onMouseEnterOption || noop)(event);
-    
+
     setState(true);
   };
 
@@ -62,10 +69,10 @@ const useHover = (element: Element, options?: UseHoverOptions): [React.ReactElem
     if (stopPropagation) {
       event.stopPropagation();
     }
-    
+
     (originalOnMouseLeave || noop)(event);
     (onMouseLeaveOption || noop)(event);
-    
+
     setState(false);
   };
 

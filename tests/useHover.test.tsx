@@ -1,20 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { renderHook } from '@testing-library/react-hooks';
 import TestUtils from 'react-dom/test-utils';
 import useHover from '../src/useHover';
-
-let container: HTMLDivElement;
-
-beforeEach(() => {
-  container = document.createElement('div');
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  document.body.removeChild(container);
-  container = null!;
-});
 
 describe('useHover', () => {
   describe('Basic functionality (backward compatibility)', () => {
@@ -35,7 +22,7 @@ describe('useHover', () => {
     });
 
     it('should work with function-based elements', () => {
-      const { result } = renderHook(() => 
+      const { result } = renderHook(() =>
         useHover((hovered) => <div>{hovered ? 'hovered' : 'not hovered'}</div>)
       );
       const [element] = result.current;
@@ -47,19 +34,23 @@ describe('useHover', () => {
     it('should preserve existing onMouseEnter and onMouseLeave handlers', () => {
       const mockEnter = jest.fn();
       const mockLeave = jest.fn();
-      
-      const { result } = renderHook(() => 
-        useHover(<div onMouseEnter={mockEnter} onMouseLeave={mockLeave}>test</div>)
+
+      const { result } = renderHook(() =>
+        useHover(
+          <div onMouseEnter={mockEnter} onMouseLeave={mockLeave}>
+            test
+          </div>
+        )
       );
       const [element] = result.current;
 
       const mockEvent = { stopPropagation: jest.fn() };
-      
+
       // Trigger mouse enter
       element.props.onMouseEnter(mockEvent);
       expect(mockEnter).toHaveBeenCalledWith(mockEvent);
 
-      // Trigger mouse leave  
+      // Trigger mouse leave
       element.props.onMouseLeave(mockEvent);
       expect(mockLeave).toHaveBeenCalledWith(mockEvent);
     });
@@ -68,7 +59,7 @@ describe('useHover', () => {
   describe('Hover state changes', () => {
     it('should update hovered state on mouse enter/leave', () => {
       const { result } = renderHook(() => useHover(<div>test</div>));
-      
+
       // Initially not hovered
       expect(result.current[1]).toBe(false);
 
@@ -88,10 +79,10 @@ describe('useHover', () => {
     });
 
     it('should update function-based element content when hovered', () => {
-      const { result } = renderHook(() => 
+      const { result } = renderHook(() =>
         useHover((hovered) => <div>{hovered ? 'hovered' : 'not hovered'}</div>)
       );
-      
+
       // Initially shows 'not hovered'
       expect(result.current[0].props.children).toBe('not hovered');
 
@@ -107,9 +98,7 @@ describe('useHover', () => {
 
   describe('stopPropagation option', () => {
     it('should call stopPropagation when option is true', () => {
-      const { result } = renderHook(() => 
-        useHover(<div>test</div>, { stopPropagation: true })
-      );
+      const { result } = renderHook(() => useHover(<div>test</div>, { stopPropagation: true }));
       const [element] = result.current;
 
       const mockEvent = { stopPropagation: jest.fn() };
@@ -124,16 +113,14 @@ describe('useHover', () => {
     });
 
     it('should NOT call stopPropagation when option is false', () => {
-      const { result } = renderHook(() => 
-        useHover(<div>test</div>, { stopPropagation: false })
-      );
+      const { result } = renderHook(() => useHover(<div>test</div>, { stopPropagation: false }));
       const [element] = result.current;
 
       const mockEvent = { stopPropagation: jest.fn() };
 
       element.props.onMouseEnter(mockEvent);
       element.props.onMouseLeave(mockEvent);
-      
+
       expect(mockEvent.stopPropagation).not.toHaveBeenCalled();
     });
 
@@ -145,7 +132,7 @@ describe('useHover', () => {
 
       element.props.onMouseEnter(mockEvent);
       element.props.onMouseLeave(mockEvent);
-      
+
       expect(mockEvent.stopPropagation).not.toHaveBeenCalled();
     });
   });
@@ -153,7 +140,7 @@ describe('useHover', () => {
   describe('Event callback access', () => {
     it('should call onMouseEnter callback with event', () => {
       const mockCallback = jest.fn();
-      const { result } = renderHook(() => 
+      const { result } = renderHook(() =>
         useHover(<div>test</div>, { onMouseEnter: mockCallback })
       );
       const [element] = result.current;
@@ -161,14 +148,14 @@ describe('useHover', () => {
       const mockEvent = { stopPropagation: jest.fn(), clientX: 100, clientY: 200 };
 
       element.props.onMouseEnter(mockEvent);
-      
+
       expect(mockCallback).toHaveBeenCalledWith(mockEvent);
       expect(mockCallback).toHaveBeenCalledTimes(1);
     });
 
     it('should call onMouseLeave callback with event', () => {
       const mockCallback = jest.fn();
-      const { result } = renderHook(() => 
+      const { result } = renderHook(() =>
         useHover(<div>test</div>, { onMouseLeave: mockCallback })
       );
       const [element] = result.current;
@@ -176,7 +163,7 @@ describe('useHover', () => {
       const mockEvent = { stopPropagation: jest.fn(), clientX: 150, clientY: 250 };
 
       element.props.onMouseLeave(mockEvent);
-      
+
       expect(mockCallback).toHaveBeenCalledWith(mockEvent);
       expect(mockCallback).toHaveBeenCalledTimes(1);
     });
@@ -184,10 +171,10 @@ describe('useHover', () => {
     it('should work with both event callbacks', () => {
       const mockEnterCallback = jest.fn();
       const mockLeaveCallback = jest.fn();
-      const { result } = renderHook(() => 
-        useHover(<div>test</div>, { 
+      const { result } = renderHook(() =>
+        useHover(<div>test</div>, {
           onMouseEnter: mockEnterCallback,
-          onMouseLeave: mockLeaveCallback 
+          onMouseLeave: mockLeaveCallback,
         })
       );
       const [element] = result.current;
@@ -209,11 +196,11 @@ describe('useHover', () => {
     it('should work with both stopPropagation and event callbacks', () => {
       const mockEnterCallback = jest.fn();
       const mockLeaveCallback = jest.fn();
-      const { result } = renderHook(() => 
-        useHover(<div>test</div>, { 
+      const { result } = renderHook(() =>
+        useHover(<div>test</div>, {
           stopPropagation: true,
           onMouseEnter: mockEnterCallback,
-          onMouseLeave: mockLeaveCallback 
+          onMouseLeave: mockLeaveCallback,
         })
       );
       const [element] = result.current;
@@ -221,13 +208,13 @@ describe('useHover', () => {
       const mockEvent = { stopPropagation: jest.fn() };
 
       element.props.onMouseEnter(mockEvent);
-      
+
       // Should call stopPropagation AND the callback
       expect(mockEvent.stopPropagation).toHaveBeenCalled();
       expect(mockEnterCallback).toHaveBeenCalledWith(mockEvent);
 
       element.props.onMouseLeave(mockEvent);
-      
+
       expect(mockEvent.stopPropagation).toHaveBeenCalledTimes(2);
       expect(mockLeaveCallback).toHaveBeenCalledWith(mockEvent);
     });
@@ -238,13 +225,15 @@ describe('useHover', () => {
       const callbackEnter = jest.fn();
       const callbackLeave = jest.fn();
 
-      const { result } = renderHook(() => 
+      const { result } = renderHook(() =>
         useHover(
-          <div onMouseEnter={originalEnter} onMouseLeave={originalLeave}>test</div>, 
-          { 
+          <div onMouseEnter={originalEnter} onMouseLeave={originalLeave}>
+            test
+          </div>,
+          {
             stopPropagation: true,
             onMouseEnter: callbackEnter,
-            onMouseLeave: callbackLeave 
+            onMouseLeave: callbackLeave,
           }
         )
       );
@@ -253,14 +242,14 @@ describe('useHover', () => {
       const mockEvent = { stopPropagation: jest.fn() };
 
       element.props.onMouseEnter(mockEvent);
-      
+
       // All should be called: stopPropagation, original handler, and callback
       expect(mockEvent.stopPropagation).toHaveBeenCalled();
       expect(originalEnter).toHaveBeenCalledWith(mockEvent);
       expect(callbackEnter).toHaveBeenCalledWith(mockEvent);
 
       element.props.onMouseLeave(mockEvent);
-      
+
       expect(mockEvent.stopPropagation).toHaveBeenCalledTimes(2);
       expect(originalLeave).toHaveBeenCalledWith(mockEvent);
       expect(callbackLeave).toHaveBeenCalledWith(mockEvent);
@@ -281,16 +270,14 @@ describe('useHover', () => {
       const [element, hovered] = result.current;
 
       const mockEvent = { stopPropagation: jest.fn() };
-      
+
       element.props.onMouseEnter(mockEvent);
       expect(mockEvent.stopPropagation).not.toHaveBeenCalled();
       expect(hovered).toBe(false); // Should be true after rerender
     });
 
     it('should handle elements without existing mouse handlers', () => {
-      const { result } = renderHook(() => 
-        useHover(<div>test</div>, { stopPropagation: true })
-      );
+      const { result } = renderHook(() => useHover(<div>test</div>, { stopPropagation: true }));
       const [element] = result.current;
 
       const mockEvent = { stopPropagation: jest.fn() };

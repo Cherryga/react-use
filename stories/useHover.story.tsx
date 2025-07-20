@@ -16,21 +16,18 @@ const Demo = () => {
 };
 
 const NestedDemo = () => {
-  const [parentHoverable, parentHovered] = useHover(
-    (hovered: boolean) => (
-      <div
-        style={{
-          padding: '20px',
-          backgroundColor: hovered ? 'lightblue' : 'lightgray',
-          border: '1px solid #ccc',
-          margin: '10px',
-        }}
-      >
-        Parent {parentHovered && '(hovered)'}
-        {childHoverable}
-      </div>
-    )
-  );
+  const [parentHoverable, parentHovered] = useHover((hovered: boolean) => (
+    <div
+      style={{
+        padding: '20px',
+        backgroundColor: hovered ? 'lightblue' : 'lightgray',
+        border: '1px solid #ccc',
+        margin: '10px',
+      }}>
+      Parent {parentHovered && '(hovered)'}
+      {childHoverable}
+    </div>
+  ));
 
   const [childHoverable, childHovered] = useHover(
     (hovered: boolean) => (
@@ -40,8 +37,7 @@ const NestedDemo = () => {
           backgroundColor: hovered ? 'lightgreen' : 'white',
           border: '1px solid #999',
           margin: '10px',
-        }}
-      >
+        }}>
         Child {childHovered && '(hovered)'}
       </div>
     ),
@@ -67,21 +63,18 @@ const NestedDemo = () => {
 };
 
 const NestedDemoWithoutStopPropagation = () => {
-  const [parentHoverable, parentHovered] = useHover(
-    (hovered: boolean) => (
-      <div
-        style={{
-          padding: '20px',
-          backgroundColor: hovered ? 'lightblue' : 'lightgray',
-          border: '1px solid #ccc',
-          margin: '10px',
-        }}
-      >
-        Parent {parentHovered && '(hovered)'}
-        {childHoverable}
-      </div>
-    )
-  );
+  const [parentHoverable, parentHovered] = useHover((hovered: boolean) => (
+    <div
+      style={{
+        padding: '20px',
+        backgroundColor: hovered ? 'lightblue' : 'lightgray',
+        border: '1px solid #ccc',
+        margin: '10px',
+      }}>
+      Parent {parentHovered && '(hovered)'}
+      {childHoverable}
+    </div>
+  ));
 
   const [childHoverable, childHovered] = useHover(
     (hovered: boolean) => (
@@ -91,8 +84,7 @@ const NestedDemoWithoutStopPropagation = () => {
           backgroundColor: hovered ? 'lightgreen' : 'white',
           border: '1px solid #999',
           margin: '10px',
-        }}
-      >
+        }}>
         Child {childHovered && '(hovered)'}
       </div>
     )
@@ -103,7 +95,8 @@ const NestedDemoWithoutStopPropagation = () => {
     <div>
       <h3>Nested Hover WITHOUT stopPropagation</h3>
       <p>
-        Both elements will be hovered when you hover over the child, because events bubble up to the parent.
+        Both elements will be hovered when you hover over the child, because events bubble up to the
+        parent.
       </p>
       {parentHoverable}
       <div>
@@ -128,8 +121,7 @@ const EventAccessDemo = () => {
           border: '1px solid #ccc',
           margin: '10px',
           cursor: 'pointer',
-        }}
-      >
+        }}>
         Hover me to see event details! {hovered && '(hovered)'}
       </div>
     ),
@@ -167,8 +159,7 @@ const EventAccessDemo = () => {
             padding: '10px',
             margin: '10px 0',
             backgroundColor: '#f9f9f9',
-          }}
-        >
+          }}>
           {events.length === 0 ? (
             <em>No events yet</em>
           ) : (
